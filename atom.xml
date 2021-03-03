@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://murphypei.github.io/"/>
-  <updated>2021-02-20T10:17:43.860Z</updated>
+  <updated>2021-03-03T08:06:08.200Z</updated>
   <id>https://murphypei.github.io/</id>
   
   <author>
@@ -15,6 +15,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>git 不同平台下软链接问题</title>
+    <link href="https://murphypei.github.io//blog/2021/03/git-symlink.html"/>
+    <id>https://murphypei.github.io//blog/2021/03/git-symlink.html</id>
+    <published>2021-03-03T07:05:06.000Z</published>
+    <updated>2021-03-03T08:06:08.200Z</updated>
+    
+    <content type="html"><![CDATA[<p>早就听说不同平台软链接兼容问题很大，最近遇上了，记录一下这个问题。</p><a id="more"></a><h3 id="问题场景"><a href="#问题场景" class="headerlink" title="问题场景"></a>问题场景</h3><p>问题场景很常见也很简单。有一个 C++ 项目，在 Linux 下开发，引用了一些第三方库，比如 opencv，其中的 lib 有些是软链接的形式。在 windows 下拉取仓库之后，发现软链接失效了（不影响 windows 平台本身的运行）。我使用 clion 将 windows 的代码同步到远程开发机，则编译无法进行，文件格式错误。原因在于不同操作系统使用的文件系统不同，因此软链接失效了。不同文件系统软链接不兼容的问题，网上自己找找一大堆，实现不同，没啥说的。</p><h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><p>现在的 git 都支持了软链接的兼容处理，安装的时候有个 symlink 选项，勾上即可。另外需要在 clone 的时候处理：</p><ul><li>首先，使用<strong>以管理员方式</strong>打开 git bash，因为 windows 创建软链接需要管理员权限。</li><li>clone 的时候必须<strong>明确指定</strong>兼容软链接。<code>git clone -c core.symlinks=true ...</code>。在 亲测 <code>.gitconfig</code> 中设置无效。</li></ul><p>这样 clone 下来的仓库里，之前的软链接就变成了 windows 系统中的快捷方式。但是这种快捷方式通过 clion 同步到 Linux 中就是自动的软链接，非常 nice。</p><h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul><li>windows 下的 git bash 可以通过创造快捷方式的办法兼容 Linux 下的软链接，并且同步到 Linux 中还能保持软链接。</li><li>clion 的远程开发落后 vscode 一个段位，本质就是 rsync 文件同步和 ssh 执行一些命令，因此当遇到这种 windows 和 Linux 中不兼容的文件，这种简单的同步方式必然 GG。</li></ul><p>为了解决这个问题顺便测试了最新的 vscode 的 C/C++ 和 cmake 插件，已经解决之前的 includePath 和跳转提示问题，加上强大的 remote 和 git，我觉得 vscode 取代 clion 已经是近在咫尺了。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;早就听说不同平台软链接兼容问题很大，最近遇上了，记录一下这个问题。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="Git" scheme="https://murphypei.github.io/categories/Git/"/>
+    
+    
+      <category term="git" scheme="https://murphypei.github.io/tags/git/"/>
+    
+      <category term="symlink" scheme="https://murphypei.github.io/tags/symlink/"/>
+    
+      <category term="linux" scheme="https://murphypei.github.io/tags/linux/"/>
+    
+      <category term="windows" scheme="https://murphypei.github.io/tags/windows/"/>
+    
+  </entry>
   
   <entry>
     <title>OpenGL 渲染管线简介</title>
@@ -314,11 +342,11 @@
     
       <category term="机器学习" scheme="https://murphypei.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="概率论" scheme="https://murphypei.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/"/>
-    
       <category term="最大似然" scheme="https://murphypei.github.io/tags/%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6/"/>
     
       <category term="最大后验概率" scheme="https://murphypei.github.io/tags/%E6%9C%80%E5%A4%A7%E5%90%8E%E9%AA%8C%E6%A6%82%E7%8E%87/"/>
+    
+      <category term="概率论" scheme="https://murphypei.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/"/>
     
   </entry>
   
@@ -342,9 +370,9 @@
     
       <category term="机器学习" scheme="https://murphypei.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
-      <category term="贝叶斯定理" scheme="https://murphypei.github.io/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AE%9A%E7%90%86/"/>
-    
       <category term="概率论" scheme="https://murphypei.github.io/tags/%E6%A6%82%E7%8E%87%E8%AE%BA/"/>
+    
+      <category term="贝叶斯定理" scheme="https://murphypei.github.io/tags/%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%AE%9A%E7%90%86/"/>
     
   </entry>
   
@@ -531,34 +559,6 @@
       <category term="migrate" scheme="https://murphypei.github.io/tags/migrate/"/>
     
       <category term=".gitattributes" scheme="https://murphypei.github.io/tags/gitattributes/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>梯度消失和梯度爆炸</title>
-    <link href="https://murphypei.github.io//blog/2019/12/sigmoid-gradient.html"/>
-    <id>https://murphypei.github.io//blog/2019/12/sigmoid-gradient.html</id>
-    <published>2019-12-23T06:33:54.000Z</published>
-    <updated>2021-02-20T03:32:19.540Z</updated>
-    
-    <content type="html"><![CDATA[<p>周末刷知乎看到一个问题，关于如何理解梯度消失和梯度爆炸的。有个回答讲的比较好，就和 sigmoid 函数一起总结一下吧。</p><a id="more"></a><h3 id="梯度消失和爆炸"><a href="#梯度消失和爆炸" class="headerlink" title="梯度消失和爆炸"></a>梯度消失和爆炸</h3><p>梯度消失和梯度爆炸本质就是<strong>激活函数（的导数）和权重相互作用产生的联合效果</strong>，这个很重要，因为很多人以为梯度消失和爆炸是只存在某些激活函数中，其实不然。梯度消失和爆炸不单单是激活函数的问题， 不管你用 sigmoid/tanh 还是 ReLU 都有可能发生梯度消失/爆炸，只是发生的频繁程度不同。</p><p>我们知道，神经网络的每层计算可以看重矩阵相乘之后接一个非线性映射也就是激活函数，可以表示为：</p><script type="math/tex; mode=display">h_{t+1}= \sigma (Wh_t)</script><p>求导以后就是：</p><script type="math/tex; mode=display">\frac {\partial h_{t+1}} {\partial ht}=diag(\sigma'(Wh_t))W</script><p>其中等式右边第一项是对角阵，表示激活函数的导函数，假如<strong>激活函数是 sigmoid 函数，则对角阵中每个元素都小于 1</strong> ，会产生压缩的效果；而第二项特征值的大小与 W 本身有关，既可能收缩也可能扩张。</p><p>假如 W 的所有特征值都小于 1，那么此时两项相乘也是收缩的效果；反之，两项的乘积有可能（注意不是一定）产生扩张的效果。多层累积以后，就有可能发生梯度消失和梯度爆炸。 因为 sigmoid 函数的导数值域小于 1，所以很依赖 W 的值，因此容易产生梯度消失，tanh 同理。但是并不是说一定会梯度消失。如果使用的激活函数的导数值域大于 1，则容易产生梯度爆炸，但是不一定会。ReLU 梯度等于 1，看上去比较合适。</p><h3 id="sigmoid-求导"><a href="#sigmoid-求导" class="headerlink" title="sigmoid 求导"></a>sigmoid 求导</h3><p>为什么 sigmoid 函数的导数小于 1 呢？求导就明白了。</p><p>sigmoid 函数：</p><script type="math/tex; mode=display">f(x) = \frac {1}{1 + e^{-x}}= (1 + e^{-x})^{-1}</script><p>求导：</p><script type="math/tex; mode=display">\begin {align}f'(x) &= (-1) (1 + e^{-x})^{-2}e^{-x}(-1) \\&= (1+e^{-x})^{-2}e^{-x} \\&= \frac {e^{-x}} {(1+e^{-x})^2} \\&= \frac {1+e^{-x}-1} {(1+e^{-x})^2} \\&= \frac {1+e^{-x}} {(1+e^{-x})^2} -  \frac {1} {(1+e^{-x})^2} \\&= \frac {1+e^{-x}} {(1+e^{-x})^2} -  \frac {1} {(1+e^{-x})^2} \\&= \frac {1} {1+e^{-x}} -  \frac {1} {(1+e^{-x})^2} \\&= f(x) - (f(x))^2\end {align}</script><p>因为 sigmoid 函数的值域： $0 &lt; f(x) &lt; 1$ ，因此 $0 &lt; f’(x) &lt; 1$。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;周末刷知乎看到一个问题，关于如何理解梯度消失和梯度爆炸的。有个回答讲的比较好，就和 sigmoid 函数一起总结一下吧。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="MachineLearning" scheme="https://murphypei.github.io/categories/MachineLearning/"/>
-    
-    
-      <category term="机器学习" scheme="https://murphypei.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
-      <category term="sigmoid" scheme="https://murphypei.github.io/tags/sigmoid/"/>
-    
-      <category term="梯度消失" scheme="https://murphypei.github.io/tags/%E6%A2%AF%E5%BA%A6%E6%B6%88%E5%A4%B1/"/>
-    
-      <category term="梯度爆炸" scheme="https://murphypei.github.io/tags/%E6%A2%AF%E5%BA%A6%E7%88%86%E7%82%B8/"/>
     
   </entry>
   
