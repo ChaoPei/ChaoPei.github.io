@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://murphypei.github.io/"/>
-  <updated>2021-03-03T08:10:38.140Z</updated>
+  <updated>2021-03-09T09:04:30.360Z</updated>
   <id>https://murphypei.github.io/</id>
   
   <author>
@@ -15,6 +15,62 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>C++ sizeof 总结</title>
+    <link href="https://murphypei.github.io//blog/2021/03/cpp-sizeof.html"/>
+    <id>https://murphypei.github.io//blog/2021/03/cpp-sizeof.html</id>
+    <published>2021-03-09T09:02:13.000Z</published>
+    <updated>2021-03-09T09:04:30.360Z</updated>
+    
+    <content type="html"><![CDATA[<p>sizeof 是很老的知识，从笔记移到博文中。</p><a id="more"></a><p>计算机取数据最低一个字节，基本都是双字，因此如果数据没有对齐，有时候一个数可能分布在多个字节中，内存对齐是为了加快计算机的取数速度，否则就得多花指令周期。关于内存对齐，可以参考<a href="https://murphypei.github.io/blog/2020/04/memory-align.html">浅谈内存对齐</a>。下面是 sizeof 的一些对齐知识。</p><h4 id="对齐基本规则"><a href="#对齐基本规则" class="headerlink" title="对齐基本规则"></a>对齐基本规则</h4><ul><li>结构体变量的首地址能够被其最宽基本类型成员的大小所整除。</li><li>结构体每个成员相对于结构体首地址的偏移量（offset）都是成员大小的整数倍，如有需要编译器会在成员之间加上填充字节（internal adding）。</li><li>结构体的总大小为结构体最宽基本类型成员大小的整数倍，如有需要编译器会在最末一个成员之后加上填充字节（trailing padding）。</li></ul><h4 id="sizeof-类或者结构体"><a href="#sizeof-类或者结构体" class="headerlink" title="sizeof 类或者结构体"></a>sizeof 类或者结构体</h4><ul><li>sizeof 结构体以及类的实例是同一结果，sizeof 类本质上就是计算类的实例大小。</li><li>sizeof 一个空类（或者空结构体），结果是 1。空类，没有任何成员变量或函数，即没有存储任何内容，所以大小为 0，但是由于空类仍然可以实例化，一个类能够实例化，编译器就需给它分配内存空间，来指示类实例的地址，所以编译器就为类默认添加了一个隐藏的字节。</li><li>sizeof 只考虑类的成员变量，不需要考虑成员函数，<strong>但是虚函数会增加虚表指针的空间（虚表指针在对象内存的首位置）。</strong></li><li>类的静态成员变量不计入 sizeof 大小。</li><li>子类继承了父类的私有成员，子类虽然不能访问，但是 sizeof 仍需要计算这一部分。<ul><li>子类继承一个空类，sizeof 则大小为子类的大小（子类也是空类，则 sizeof 为 1）</li></ul></li><li>当上述的类<strong>虚继承</strong>一个空类（是不是空都无所谓），那么虚继承的子类中需要<strong>添加一个虚基类指针</strong>（虚继承就是类似虚函数的实现来实现基类共享）</li><li>多继承中如果多个父类有虚函数，则会有多个虚函数表，子类自己定义的虚函数不会生成虚函数表，单继承时并入父类的虚表，多继承时并入继承的第一个父类的虚表中。</li></ul><h4 id="sizeof-数组"><a href="#sizeof-数组" class="headerlink" title="sizeof 数组"></a>sizeof 数组</h4><ul><li>sizeof 数组和指针是不一样的，sizeof 计算的是数组的大小。</li><li>C 风格的 char 数组，如果不指定数组的长度，计算结果是字符个数 +1，包含 \0 的结束位。    </li></ul><h4 id="sizeof-union"><a href="#sizeof-union" class="headerlink" title="sizeof union"></a>sizeof union</h4><p>联合体的内存是重叠的，则 sizeof 就是最大数据成员的大小。</p><h4 id="利用-sizeof-获取结构体某个成员的偏移量"><a href="#利用-sizeof-获取结构体某个成员的偏移量" class="headerlink" title="利用 sizeof 获取结构体某个成员的偏移量"></a>利用 sizeof 获取结构体某个成员的偏移量</h4><p>思路：将 0 地址转换为结构体的指针，然后获取成员的地址即偏移量</p><p><code>#define offsetof(s,m) (size_t)&amp;(((s *)0)-&gt;m)</code></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;sizeof 是很老的知识，从笔记移到博文中。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="C++" scheme="https://murphypei.github.io/categories/C/"/>
+    
+    
+      <category term="C++" scheme="https://murphypei.github.io/tags/C/"/>
+    
+      <category term="sizeof" scheme="https://murphypei.github.io/tags/sizeof/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>C++ 中 malloc 和 new 的区别</title>
+    <link href="https://murphypei.github.io//blog/2021/03/malloc-new-diff.html"/>
+    <id>https://murphypei.github.io//blog/2021/03/malloc-new-diff.html</id>
+    <published>2021-03-09T08:58:07.000Z</published>
+    <updated>2021-03-09T09:01:58.810Z</updated>
+    
+    <content type="html"><![CDATA[<p>C++ 中 malloc 和 new 都能开辟内存，这篇笔记记录 C++ 中 malloc 和 new 开辟新内存的区别。</p><a id="more"></a><h4 id="申请内存的位置不同："><a href="#申请内存的位置不同：" class="headerlink" title="申请内存的位置不同："></a>申请内存的位置不同：</h4><ul><li><strong>new 操作符从自由存储区（free store）上为对象动态分配内存空间</strong>，自由存储区是 C++ 基于 new 操作符的一个抽象概念，凡是通过 new 操作符进行内存申请，该内存即为自由存储区。自由存储区不仅可以是堆，还可以是静态存储区，这都    看 operator new 在哪里为对象分配内存。</li><li><strong>malloc 函数从堆上动态分配内存</strong>。</li></ul><h4 id="返回类型的安全性"><a href="#返回类型的安全性" class="headerlink" title="返回类型的安全性"></a>返回类型的安全性</h4><ul><li>new 操作符内存分配成功时，返回的是对象类型的指针，类型严格与对象匹配，无须进行类型转换，故 new 是符合类型安全性的操作符。</li><li>malloc 内存分配成功则是返回 void 指针 ，需要通过强制类型转换将 void 指针转换成我们需要的类型。</li></ul><h4 id="内存分配失败时的返回值"><a href="#内存分配失败时的返回值" class="headerlink" title="内存分配失败时的返回值"></a>内存分配失败时的返回值</h4><ul><li>new 内存分配失败时，会抛出 bac_alloc 异常，它不会返回 NULL。</li><li>malloc 分配失败时返回 NULL。</li></ul><h4 id="分配内存大小"><a href="#分配内存大小" class="headerlink" title="分配内存大小"></a>分配内存大小</h4><ul><li>使用 new 操作符申请内存分配时无须指定内存块的大小，编译器会根据类型信息自行计算。</li><li>malloc 则需要明确指出所需内存的尺寸。</li></ul><h4 id="是否调用构造函数-析构函数"><a href="#是否调用构造函数-析构函数" class="headerlink" title="是否调用构造函数/析构函数"></a>是否调用构造函数/析构函数</h4><ul><li>使用 new 操作符来分配对象内存时会经历三个步骤：<ol><li>调用 operator new 函数（对于数组是 operator new[]）分配一块足够大的，原始的，未命名的内存空间以便存储特定类型的对象。</li><li>编译器运行相应的构造函数以构造对象，并为其传入初值。</li><li>对象构造完成后，返回一个指向该对象的指针。</li></ol></li><li>使用 delete 操作符来释放对象内存时会经历两个步骤：<ol><li>调用对象的析构函数。</li><li>编译器调用operator delete(或operator delete[])函数释放内存空间。</li></ol></li><li>malloc不会调用构造函数，free也不会调用析构函数。</li></ul><h4 id="对于数组的处理"><a href="#对于数组的处理" class="headerlink" title="对于数组的处理"></a>对于数组的处理</h4><ul><li>C++ 提供了 new[] 与 delete[] 来专门处理数组类型的分配。new 对数组的支持体现在它会分别调用构造函数函数初始化每一个数组元素，释放对象时为每个对象调用析构函数。</li><li>注意 delete[] 要与 new[] 配套使用，不然会找出数组对象部分释放的现象，造成内存泄漏。</li><li>malloc 并知道你在这块内存上要放的数组还是啥别的东西，反正它就给你一块原始的内存，在给你个内存的地址就完事。所以如果要动态分配一个数组的内存，还需要我们手动自定数组的大小</li></ul><h4 id="是否可以被重载"><a href="#是否可以被重载" class="headerlink" title="是否可以被重载"></a>是否可以被重载</h4><p>opeartor new /operator delete 可以被重载。注意，new 表达式和 operator new 是不同的，前者调用后者，严格来说，我们区分的是 new 表达式和 malloc 表达式，所以应该都不支持重载。</p><h4 id="是否支持内存扩充"><a href="#是否支持内存扩充" class="headerlink" title="是否支持内存扩充"></a>是否支持内存扩充</h4><ul><li>new 不支持内存扩充</li><li>malloc 在分配内存后，如果内存不足，可以<strong>使用 realloc 进行内存重新分配</strong>，实现扩充。</li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;C++ 中 malloc 和 new 都能开辟内存，这篇笔记记录 C++ 中 malloc 和 new 开辟新内存的区别。&lt;/p&gt;
+    
+    </summary>
+    
+      <category term="C++" scheme="https://murphypei.github.io/categories/C/"/>
+    
+    
+      <category term="C++" scheme="https://murphypei.github.io/tags/C/"/>
+    
+      <category term="delete" scheme="https://murphypei.github.io/tags/delete/"/>
+    
+      <category term="new" scheme="https://murphypei.github.io/tags/new/"/>
+    
+      <category term="malloc" scheme="https://murphypei.github.io/tags/malloc/"/>
+    
+      <category term="operator new" scheme="https://murphypei.github.io/tags/operator-new/"/>
+    
+      <category term="free" scheme="https://murphypei.github.io/tags/free/"/>
+    
+  </entry>
   
   <entry>
     <title>Git 不同平台下软链接问题</title>
@@ -501,64 +557,6 @@
     
     
       <category term="Ubuntu， Linux， bashrc， profile， bash_profile" scheme="https://murphypei.github.io/tags/Ubuntu%EF%BC%8C-Linux%EF%BC%8C-bashrc%EF%BC%8C-profile%EF%BC%8C-bash-profile/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Assert 在 Debug 和 Release 引起的问题</title>
-    <link href="https://murphypei.github.io//blog/2020/01/assert-debug-release.html"/>
-    <id>https://murphypei.github.io//blog/2020/01/assert-debug-release.html</id>
-    <published>2020-01-17T08:56:49.000Z</published>
-    <updated>2020-12-10T21:31:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>在一次代码调试过程中，发现 Debug 和 Release 的结果不一致，由此引发的问题追溯…</p><a id="more"></a><p>因为 Debug 和 Release 不同，程序并没有报错，所以很容易想到是不是编译器做了什么操作导致编译的代码产生区别。</p><p>说实话，这次调试的过程是非常痛苦的，完全找不到头绪，最后通过一步步代码回退发现是 assert 的调用导致了问题。大概原理如下：</p><p>假设在一个循环中重复调用函数 <code>do_something</code>。这个函数在成功的情况下返回 0，失败则返回非 0 值。但是你完全不期望它在程序中<br>出现失败的情况。你可能会想这样写：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">100</span>; ++i)</span><br><span class="line">  assert (do_something () == <span class="number">0</span>);</span><br></pre></td></tr></table></figure><p>不过，你可能发现这个运行时检查引入了不可承受的性能损失，并因此决定稍候指定 NDEBUG 以禁用运行时检测（Release 编译就等同于此）。这样做的结果是整个对 assert 的调用会被完全删除，也就是说，assert 宏的条件表达式将永远不会被执行，<code>do_something</code> 一次也不会被调用。因此，<strong>这样写才是正确的</strong>：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">100</span>; ++i) &#123;</span><br><span class="line">  <span class="keyword">int</span> status = do_something ();</span><br><span class="line">  assert (status == <span class="number">0</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>进一步查询发现，在 <code>&lt;cassert&gt;</code> 头文件中，assert 的定义为：</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> NDEBUG</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> assert(condition) ((void)0)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> assert(condition) <span class="comment">/*implementation defined*/</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br></pre></td></tr></table></figure><p>也就是说 <code>assert</code> 语句在 Release 模式下是失效的…虽然程序继续运行了，但是结果不对。</p><p>这个问题弄了好久，但是说到底还是学艺不精，吃一堑长一智吧，记住 assert 的调用正确的写法，不过也可以牺牲部分性能定义一个检查的宏来代替 assert 的检查。</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;在一次代码调试过程中，发现 Debug 和 Release 的结果不一致，由此引发的问题追溯…&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="C/C++" scheme="https://murphypei.github.io/categories/C-C/"/>
-    
-    
-      <category term="C++" scheme="https://murphypei.github.io/tags/C/"/>
-    
-      <category term="debug" scheme="https://murphypei.github.io/tags/debug/"/>
-    
-      <category term="assert" scheme="https://murphypei.github.io/tags/assert/"/>
-    
-      <category term="断言" scheme="https://murphypei.github.io/tags/%E6%96%AD%E8%A8%80/"/>
-    
-      <category term="宏" scheme="https://murphypei.github.io/tags/%E5%AE%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Git-LFS 使用和迁移</title>
-    <link href="https://murphypei.github.io//blog/2019/12/git-lfs.html"/>
-    <id>https://murphypei.github.io//blog/2019/12/git-lfs.html</id>
-    <published>2019-12-23T12:39:50.000Z</published>
-    <updated>2020-12-10T21:31:43.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>一次 Git-LFS 的迁移记录。</p><a id="more"></a><p>网上说了一大堆 Git-LFS 的作用和好处，我觉得都是把官方文档零零碎碎翻译一下。在我看来，对于普通开发者而言，Git-LFS 的作用很简单，就是让你 <strong>pull 代码的时候不用每次都把一大堆大文件一块 pull 下来</strong>，而且我个人使用体验还有切换分支之类的操作都变快了。</p><h3 id="Git-LFS-安装"><a href="#Git-LFS-安装" class="headerlink" title="Git-LFS 安装"></a>Git-LFS 安装</h3><p><code>sudo apt/yum install git-lfs</code> 即可，然后 <code>git lfs install</code>。</p><h3 id="Git-LFS-使用"><a href="#Git-LFS-使用" class="headerlink" title="Git-LFS 使用"></a>Git-LFS 使用</h3><h4 id="追踪和推送"><a href="#追踪和推送" class="headerlink" title="追踪和推送"></a>追踪和推送</h4><p>在一个已经初始化后的 Git 仓库中使用 Git-LFS 来追踪大文件，命令如下：</p><p><code>git lfs track &lt;filepattern&gt;</code></p><p>track 会产生一个 <code>.gitattributes</code> 文件，和 <code>.gitignore</code> 类似，也是 git 自己的文件，用于描述 Git-LFS 的文件名匹配模板。一般而言，文件中的每一行类似这种：</p><p><code>*.pbtxt filter=lfs diff=lfs merge=lfs -text</code></p><p><code>-text</code> 就是表示这个文件<strong>不是文本文件</strong>。其余的就是告诉 Git 在处理 filter、diff、merge 时将 pbtxt 文件通过 LFS 的方式处理，打开 <code>.gitconfig</code> 可以看到相关命令的替换。</p><p>用 Git-LFS track 追踪档案之后，就可以添加、提交和推送到远端目录上，你在首次推上去的时候，会要一些时间将大型档案传输到远端。这里是很多教程很模糊的地方，事实上，Git-LFS 并不是什么魔法，仍然要将文件同步到远端。有的 git 仓库页面会显示 Git-LFS 的标记，gitlab 就可以，好评，tx 自用的工蜂，呵呵。</p><h4 id="拉取"><a href="#拉取" class="headerlink" title="拉取"></a>拉取</h4><p>其他用户使用这个仓库的时候，使用 <code>git clone</code> 会拉取普通的文件，但是 LFS 追踪的文件不会被拉下来。如果这些文件本地没有，则需要使用 <code>git lfs pull</code> 从远程仓库拉取。</p><blockquote><p>现在的 git 貌似是直接能够拉取所有文件，包括 lfs 文件，如果不想拉取 lfs 文件，可以使用 <code>GIT_LFS_SKIP_SMUDGE=1 git clone</code></p></blockquote><p>总结来看，Git-LFS 唯一的目的就是于其他 clone 使用者来说，他们若不需要异动大型档案，就不需要进行git lfs pull 的动作，于是那个原本的大型档案会变成一个130 bytes 的文字档。即使他clone 整个master，也是很小的储存库。Git-LFS 的使用无关档案大小，唯一的重点在于某些档案你想放在 master 内，或是说必须放在master 内，而其他人又不需要同步这个档案的话，就可以使用 Git-LFS 的方式来管理此档案。</p><h3 id="Git-LFS-迁移"><a href="#Git-LFS-迁移" class="headerlink" title="Git-LFS  迁移"></a>Git-LFS  迁移</h3><p>这个才是比较实用的，因为很多仓库是用着用着才想着用 lfs…</p><p>对于一个已经用了一段时间的 Git 仓库，直接执行  <code>git lfs migrate import --include=&quot;*.bin&quot; --everything</code> ，可以将所有本地分支上的匹配文件的提交历史版本都转换为 lfs，这个时候无论你切换到哪个分支，都会出现 <code>.gitattributes</code> 文件，且内容都是一样的。</p><blockquote><p>如果只想更新某个分支的话，可以使用 <code>git lfs migrate import --include=&quot;*.bin&quot; --include-ref=refs/heads/master</code></p></blockquote><p>可以通过 <code>git lfs ls-files</code> 查看哪些文件被转换成 lfs 了。</p><p>切换成功后，就需要把切换之后的本地分支提交到远程仓库了，需要手动 push 更新远程仓库中的各个分支。这里有个极大需要注意的地方，就是转换会更改所有提交的 hash，因此 push 的时候需要使用 force 选项，而当其他人员再次使用 pull 去远程拉取的时候会失败。这里当然可以使用 <code>pull --allow-unrelated-histories</code> 来把远程仓库被修改的历史与本地仓库历史做合并，但是最好是<strong>重新拉取</strong>。</p><p>切换成功后，git 仓库的大小可能并没有变化，主要是之前的提交还在，因此需要做一些清理工作：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git reflog expire --expire-unreachable=now --all</span><br><span class="line">git gc --prune=now</span><br></pre></td></tr></table></figure><p>但是，<strong>如果不是历史记录非常重要的仓库，建议不要像上述这么做，而是重新建立一个新的仓库。个人经验，迁移可以使用，但并没那么美好</strong>。</p><p>附一个迁移相关的<a href="https://github.com/Git-LFS/Git-LFS/wiki/Tutorial" target="_blank" rel="noopener">基础教程</a></p><h3 id="Git-LFS-需要多次输入密码的问题"><a href="#Git-LFS-需要多次输入密码的问题" class="headerlink" title="Git-LFS 需要多次输入密码的问题"></a>Git-LFS 需要多次输入密码的问题</h3><p>解决 Git-LFS 使用导致 push 需要输入多次用户名和密码。</p><p>Linux：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set git to use the credential memory cache</span></span><br><span class="line">git config --global credential.helper cache</span><br><span class="line"></span><br><span class="line"><span class="comment"># Set the cache to timeout after 1 hour (setting is in seconds)</span></span><br><span class="line">git config --global credential.helper <span class="string">'cache --timeout=3600'</span></span><br></pre></td></tr></table></figure><p>其他平台可以参考：<a href="https://help.github.com/en/github/using-git/caching-your-github-password-in-git" target="_blank" rel="noopener">Caching your GitHub password in Git</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;一次 Git-LFS 的迁移记录。&lt;/p&gt;
-    
-    </summary>
-    
-      <category term="Git" scheme="https://murphypei.github.io/categories/Git/"/>
-    
-    
-      <category term="Git" scheme="https://murphypei.github.io/tags/Git/"/>
-    
-      <category term="LFS" scheme="https://murphypei.github.io/tags/LFS/"/>
-    
-      <category term="migrate" scheme="https://murphypei.github.io/tags/migrate/"/>
-    
-      <category term=".gitattributes" scheme="https://murphypei.github.io/tags/gitattributes/"/>
     
   </entry>
   
